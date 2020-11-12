@@ -31,15 +31,20 @@ $arrayP = [];
 
 foreach ($tagsP as $div) {
     $class = $div->getAttribute('class');
+
     if ($class == 'page_content') {
         $divsInternas = $div->getElementsByTagName('div');
+
         foreach ($divsInternas as $divInterna) {
             $classeInterna = $divInterna->getAttribute('class');
+
             if ($classeInterna == 'box_announce') {
                 $PsInternos = $divInterna->getElementsByTagName('p');
+
                 foreach ($PsInternos as $PsInterno) {
                     $arrayP[] = $PsInterno->nodeValue;
                 }
+
                 break;
             }
         }
@@ -73,4 +78,3 @@ foreach ($tagsP as $div) {
 //         break;
 //     }
 // }
-    
