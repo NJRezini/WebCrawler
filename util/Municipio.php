@@ -21,11 +21,11 @@ class Municipio
         $divsGeral = $this->capturarTagsDivGeral();
         $divsInternas = $this->capturarDivsInternasPageContent($divsGeral);
         $divNoticia = $this->capturarDivsNoticias($divsInternas);
-        $detalhes = $this->capturarDetalhes($divNoticia);
+        $imagens = $this->capturarDetalhesImagem($divNoticia);
+        $detalhes = $this->capturarDetalhesTitulo($divNoticia);
+        $imagem = $this->capturarImagem($imagens);
         $noticia = $this->capturarTitulo($detalhes);
-        $paragrafos = $this->getArrayNoticias($noticia);
-
-        return $paragrafos;
+        return $noticia;
     }
 
     private function getContextConexao()
@@ -67,10 +67,8 @@ class Municipio
         $divsInternas = null;
         foreach ($divsGeral as $div) {
             $classeInterna = $div->getAttribute('class');
-
             if ($classeInterna == 'td-ss-main-content') {
                 $divsInternas = $div->getElementsByTagName('div');
-                break;
             }
         }
         return $divsInternas;
@@ -78,48 +76,70 @@ class Municipio
 
     private function capturarDivsNoticias($divsInternas)
     {
+        $divNoticia = [];
         foreach ($divsInternas as $divInterna) {
             $classeInterna = $divInterna->getAttribute('class');
             if ($classeInterna == 'td_module_10 td_module_wrap td-animation-stack') {
-                $divNoticia = $divInterna->getElementsByTagName('div');
+                $divNoticia[] = $divInterna->getElementsByTagName('div');
             }
         }
         return $divNoticia;
     }
 
-    private function capturarDetalhes($divNoticia)
+    private function capturarDetalhesTitulo($divNoticia)
     {
+        $detalhes = [];
         foreach ($divNoticia as $divInterna) {
-            $classeInterna = $divInterna->getAttribute('class');
-
-            if ($classeInterna == 'item-details') {
-                $detalhes = $divInterna->getElementsByTagName('h3');
+            foreach($divInterna as $titulo){
+                $classeInterna = $titulo->getAttribute('class');
+    
+                if ($classeInterna == 'item-details') {
+                    $detalhes[] = $titulo->getElementsByTagName('h3');
+                }
             }
         }
         return $detalhes;
     }
 
-    
 
     private function capturarTitulo($detalhes)
     {
+        $noticia = [];
         foreach ($detalhes as $divInterna) {
-            $classeInterna = $divInterna->getAttribute('class');
-
-            if ($classeInterna == 'entry-title td-module-title') {
-                $noticia = $divInterna->getElementsByTagName('a');
+            foreach ($divInterna as $div) {
+                $classeInterna = $div->getAttribute('class');
+                
+                if ($classeInterna == 'entry-title td-module-title') {
+                    $noticia[] = $div->nodeValue;
+                }
             }
         }
         return $noticia;
     }
-
-
-    private function getArrayNoticias($noticia)
+    
+    private function capturarDetalhesImagem($divNoticia)
     {
-        foreach ($noticia as $PInterno) {
-            $arrayNoticias[] = $PInterno->nodeValue;
+        $imagens = [];
+        foreach ($divNoticia as $divInterna) {
+            foreach($divInterna as $imagem){
+                $classeInterna = $imagem->getAttribute('class');
+                
+                if ($classeInterna == 'td-module-thumb') {
+                    $imagens[] = $imagem->getElementsByTagName('img');
+                }
+            }
         }
+        return $imagens;
+    }
 
-        return $arrayNoticias;
+    private function capturarImagem($imagens)
+    {
+        $imagepaths = [];
+        foreach ($imagens as $imageTags) {
+            foreach ($imageTags as $tags) {
+                $imagepaths[] = $tags->getAttribute('src');
+            }
+        }
+        return $imagepaths;
     }
 }

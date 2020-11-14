@@ -3,6 +3,6 @@
 require './util/Municipio.php';
 
 $gut = new Municipio();
-$paragrafos = $gut->getParagrafos();
+$noticias = $gut->getParagrafos();
 
-print_r($paragrafos);
+// print_r($noticias);
