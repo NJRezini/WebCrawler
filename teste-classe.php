@@ -1,8 +1,12 @@
 <?php
 
-require './util/Municipio.php';
+require './util/MunicipioCrawler.php';
 
 $gut = new Municipio();
-$noticias = $gut->getParagrafos();
+$titulos = $gut->getTitulos();
+$imagens = $gut->getSrcImagens();
+$links = $gut->getLinks();
 
-// print_r($noticias);
+// print_r($titulos);
+// print_r($imagens);
+// print_r($links);
